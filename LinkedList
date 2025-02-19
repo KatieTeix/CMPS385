@@ -1,0 +1,74 @@
+#include <iostream>
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+void LinkedlistInsert(int data, int index, Node** head) {
+    Node* newNode = new Node();
+    newNode->data = data;
+    newNode->next = nullptr;
+
+    // If inserting at the head (index 0)
+    if (index == 0) {
+        newNode->next = *head;
+        *head = newNode;
+        return;
+    }
+
+    Node* current = *head;
+    for (int i = 0; i < index - 1 && current != nullptr; ++i) {
+        current = current->next;
+    }
+
+    if (current != nullptr) {
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+
+    // If current is nullptr, index is out of bounds, we can ignore for now.
+}
+
+int LinkedlistDelete(int index, Node** head) {
+    if (*head == nullptr) return -1; // List is empty
+
+    Node* current = *head;
+
+    if (index == 0) { // Delete head
+        *head = current->next;
+        int deletedData = current->data;
+        delete current; // Free memory
+        return deletedData;
+    }
+
+    Node* previous = nullptr;
+    for (int i = 0; i < index && current != nullptr; ++i) {
+        previous = current;
+        current = current->next;
+    }
+
+    if (current != nullptr) {
+        previous->next = current->next;
+        int deletedData = current->data;
+        delete current; // Free memory
+        return deletedData;
+    }
+
+    return -1; // Index out of bounds
+}
+
+// Example usage
+int main() {
+    Node* head = nullptr;
+
+    LinkedlistInsert(10, 0, &head); // Insert 10 at index 0
+    LinkedlistInsert(20, 1, &head); // Insert 20 at index 1
+    LinkedlistInsert(15, 1, &head); // Insert 15 at index 1
+    LinkedlistInsert(5, 0, &head);   // Insert 5 at index 0
+
+    std::cout << "Deleted value: " << LinkedlistDelete(1, &head) << std::endl; // Deletes 15
+    std::cout << "Deleted value: " << LinkedlistDelete(0, &head) << std::endl; // Deletes 5
+
+    return 0;
+}
