@@ -1,0 +1,37 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+// Function to push an element onto the stack
+void push(int T, stack<int>& Stack) {
+    Stack.push(T);
+}
+
+// Function to get the top element and pop it from the stack
+int topAndPop(stack<int>& Stack) {
+    if (Stack.empty()) {
+        cerr << "Error: Stack is empty!" << endl;
+        return -1; // Indicating an error
+    }
+    int topElement = Stack.top();
+    Stack.pop();
+    return topElement;
+}
+
+int main() {
+    stack<int> myStack;
+
+    // Testing push function
+    push(10, myStack);
+    push(20, myStack);
+    push(30, myStack);
+
+    // Testing topAndPop function
+    cout << "Top and pop: " << topAndPop(myStack) << endl; // Should print 30
+    cout << "Top and pop: " << topAndPop(myStack) << endl; // Should print 20
+    cout << "Top and pop: " << topAndPop(myStack) << endl; // Should print 10
+    cout << "Top and pop: " << topAndPop(myStack) << endl; // Should print an error message
+
+    return 0;
+}
