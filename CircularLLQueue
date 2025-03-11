@@ -1,0 +1,98 @@
+// had issues with include "QueueException.h" and had to work without it
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int data) {
+        this->data = data;
+        this->next = nullptr;
+    }
+};
+
+class CircularQueue {
+private:
+    Node* front;
+    Node* rear;
+
+public:
+    // Constructor
+    CircularQueue() {
+        front = nullptr;
+        rear = nullptr;
+    }
+
+    // 2. isEmpty()
+    bool isEmpty() {
+        return front == nullptr;
+    }
+
+    // 3. enqueue()
+    void enqueue(int data) {
+        Node* newNode = new Node(data);
+
+        if (isEmpty()) {
+            front = newNode;
+            rear = newNode;
+            newNode->next = front;  // Point to itself to form a circular list
+        }
+        else {
+            rear->next = newNode;
+            rear = newNode;
+            rear->next = front;  // Maintain circular link
+        }
+    }
+
+    // 4. dequeue()
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is empty, cannot dequeue." << endl;
+            return;
+        }
+
+        int dequeuedValue = front->data;
+        cout << "Dequeued element: " << dequeuedValue << endl;
+
+        // If only one element is present
+        if (front == rear) {
+            delete front;
+            front = nullptr;
+            rear = nullptr;
+        }
+        else {
+            Node* temp = front;
+            front = front->next;
+            rear->next = front;  // Maintain circular link
+            delete temp;
+        }
+    }
+
+    // 5. getFront()
+    void getFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty, no front element." << endl;
+        }
+        else {
+            cout << "Front element: " << front->data << endl;
+        }
+    }
+};
+
+// Example usage
+int main() {
+    CircularQueue queue;
+
+    queue.enqueue(10);
+    queue.enqueue(20);
+    queue.enqueue(30);
+
+    queue.getFront();  // Should print 10
+    queue.dequeue();   // Should print 10
+    queue.getFront();  // Should print 20
+
+    return 0;
+}
