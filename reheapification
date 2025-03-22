@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class MinHeap {
+private:
+    vector<int> heap;
+
+    void reheapUp(int index) {
+        while (index > 0) {
+            int parent = (index - 1) / 2;
+            if (heap[index] < heap[parent]) {
+                swap(heap[index], heap[parent]);
+                index = parent;
+            }
+            else {
+                break;
+            }
+        }
+    }
+
+    void reheapDown(int index) {
+        int leftChild, rightChild, minIndex;
+        while (2 * index + 1 < heap.size()) {
+            leftChild = 2 * index + 1;
+            rightChild = 2 * index + 2;
+            minIndex = index;
+
+            if (heap[leftChild] < heap[minIndex]) {
+                minIndex = leftChild;
+            }
+            if (rightChild < heap.size() && heap[rightChild] < heap[minIndex]) {
+                minIndex = rightChild;
+            }
+            if (minIndex != index) {
+                swap(heap[index], heap[minIndex]);
+                index = minIndex;
+            }
+            else {
+                break;
+            }
+        }
+    }
+
+public:
+    void insert(int value) {
+        heap.push_back(value);
+        reheapUp(heap.size() - 1);
+    }
+
+    void remove() {
+        if (heap.empty()) {
+            cout << "Heap is empty!" << endl;
+            return;
+        }
+        heap[0] = heap.back();
+        heap.pop_back();
+        if (!heap.empty()) {
+            reheapDown(0);
+        }
+    }
+
+    void printHeap() {
+        for (int val : heap) {
+            cout << val << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    MinHeap h;
+    h.insert(10);
+    h.insert(5);
+    h.insert(20);
+    h.insert(1);
+    h.insert(8);
+
+    cout << "Heap after insertions: ";
+    h.printHeap();
+
+    h.remove();
+    cout << "Heap after removing root: ";
+    h.printHeap();
+
+    return 0;
+}
