@@ -1,0 +1,65 @@
+#include <iostream>
+using namespace std;
+
+const int TABLE_SIZE = 907;
+int hashTable[TABLE_SIZE];
+
+// Initialize hash table with -1 (empty)
+void InitializeTable() {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        hashTable[i] = -1;
+    }
+}
+
+// Hash function
+int HashFunction(int key) {
+    return key % TABLE_SIZE;
+}
+
+// Insertion with linear probing
+int HashInsertion(int key) {
+    int index = HashFunction(key);
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        int probeIndex = (index + i) % TABLE_SIZE;
+        if (hashTable[probeIndex] == -1 || hashTable[probeIndex] == -2) {
+            hashTable[probeIndex] = key;
+            return probeIndex; // Success: return index
+        }
+    }
+    return -1; // Table is full
+}
+
+// Deletion with linear probing
+int HashDeletion(int key) {
+    int index = HashFunction(key);
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        int probeIndex = (index + i) % TABLE_SIZE;
+        if (hashTable[probeIndex] == -1) {
+            return -1; // Key not found
+        }
+        if (hashTable[probeIndex] == key) {
+            hashTable[probeIndex] = -2; // Mark as deleted
+            return probeIndex; // Success: return index
+        }
+    }
+    return -1; // Key not found
+}
+
+// For demonstration
+void PrintTable() {
+    for (int i = 0; i < 20; i++) { // Print only first 20 elements for brevity
+        cout << i << ": " << hashTable[i] << endl;
+    }
+}
+
+int main() {
+    InitializeTable();
+
+    // Example usage
+    HashInsertion(1001); // Insert key 1001
+    HashInsertion(1814); // Insert key 1814
+    HashDeletion(1001);  // Delete key 1001
+
+    PrintTable();        // Show current table status
+    return 0;
+}
