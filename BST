@@ -1,0 +1,105 @@
+#include <iostream>
+using namespace std;
+
+// Define a node of the BST
+struct TreeNode {
+    int data;
+    TreeNode* left;
+    TreeNode* right;
+};
+
+// Insert a node into the BST
+int InsertBST(int x, TreeNode*& T) {
+    if (T == nullptr) {
+        T = new TreeNode{ x, nullptr, nullptr };
+        return 1; // success
+    }
+    if (x < T->data) {
+        return InsertBST(x, T->left);
+    }
+    else if (x > T->data) {
+        return InsertBST(x, T->right);
+    }
+    else {
+        return 0; // duplicate element
+    }
+}
+
+// Helper to find minimum value in right subtree
+TreeNode* FindMin(TreeNode* T) {
+    while (T && T->left) {
+        T = T->left;
+    }
+    return T;
+}
+
+// Delete a node from the BST
+int DeleteBST(int x, TreeNode*& T) {
+    if (T == nullptr) return 0; // not found
+
+    if (x < T->data) {
+        return DeleteBST(x, T->left);
+    }
+    else if (x > T->data) {
+        return DeleteBST(x, T->right);
+    }
+    else {
+        // Node found
+        if (T->left == nullptr && T->right == nullptr) {
+            delete T;
+            T = nullptr;
+        }
+        else if (T->left == nullptr) {
+            TreeNode* temp = T;
+            T = T->right;
+            delete temp;
+        }
+        else if (T->right == nullptr) {
+            TreeNode* temp = T;
+            T = T->left;
+            delete temp;
+        }
+        else {
+            TreeNode* minNode = FindMin(T->right);
+            T->data = minNode->data;
+            DeleteBST(minNode->data, T->right);
+        }
+        return 1; // success
+    }
+}
+
+// In-order traversal (for testing)
+void InOrder(TreeNode* T) {
+    if (T) {
+        InOrder(T->left);
+        cout << T->data << " ";
+        InOrder(T->right);
+    }
+}
+
+// Sample usage
+int main() {
+    TreeNode* root = nullptr;
+
+    InsertBST(50, root);
+    InsertBST(30, root);
+    InsertBST(70, root);
+    InsertBST(20, root);
+    InsertBST(40, root);
+    InsertBST(60, root);
+    InsertBST(80, root);
+
+    cout << "Inorder after inserts: ";
+    InOrder(root);
+    cout << endl;
+
+    DeleteBST(20, root);
+    DeleteBST(30, root);
+    DeleteBST(50, root);
+
+    cout << "Inorder after deletes: ";
+    InOrder(root);
+    cout << endl;
+
+    return 0;
+}
