@@ -1,0 +1,59 @@
+from collections import deque
+
+def bfs(graph, start):
+    visited = set()
+    queue = deque()
+
+    visited.add(start)
+    queue.append(start)
+
+    print("BFS Traversal:", end=" ")
+
+    while queue:
+        vertex = queue.popleft()
+        print(vertex, end=" ")
+
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+def dfs(graph, start):
+    visited = set()
+    stack = []
+
+    visited.add(start)
+    stack.append(start)
+
+    print("DFS Traversal:", end=" ")
+
+    while stack:
+        vertex = stack[-1]  # Get the top of the stack
+        found_unvisited = False
+
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                stack.append(neighbor)
+                found_unvisited = True
+                break  # Go one level deeper
+
+        if not found_unvisited:
+            stack.pop()
+
+        print(vertex, end=" ")
+
+# Example graph (undirected)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B'],
+    'F': ['C']
+}
+
+# Run the traversals
+bfs(graph, 'A')
+print()
+dfs(graph, 'A')
